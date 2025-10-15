@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GREENER-GO | Privacy & Licensing</title>
+  <meta name="description" content="How GREENER-GO handles your data (no cookies, no third-party scripts, minimal logs) and how you can reuse the code & content (MIT + CC BY 4.0).">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <style>
+    :root {
+      --bg: #0b0b0b; --fg: #e7e7e7; --muted: #9aa0a6; --card: #141414; --border: #2a2a2a; --link:#9ad1ff;
+    }
+    html[data-theme="light"] {
+      --bg: #ffffff; --fg: #111111; --muted: #555; --card: #f6f6f6; --border: #dddddd; --link:#0a58ca;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto; max-width: 46rem; padding: 2rem 1rem 3rem;
+      background: var(--bg); color: var(--fg);
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
+    }
+    header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+    h1 { margin: 0; font-size: 1.35rem; letter-spacing: .02em; }
+    .toggle {
+      background: transparent; color: var(--fg); border: 1px solid var(--border);
+      padding: .45rem .7rem; border-radius: 10px; cursor: pointer;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1rem; margin: 1.25rem 0;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .muted { color: var(--muted); }
+    h2 { margin-top: 0.2rem; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    .small { font-size: .9rem; }
+  </style>
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const urlTheme = params.get("theme");
+
+      if (urlTheme) {
+        applyTheme(urlTheme, /*remember=*/true);
+      } else {
+        const saved = localStorage.getItem('gg_theme') || 'dark';
+        applyTheme(saved, /*remember=*/false);
+      }
+
+      function applyTheme(mode, remember) {
+        let actual = mode;
+        if (mode === 'auto') {
+          const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+          actual = prefersLight ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute("data-theme", actual);
+        if (remember) localStorage.setItem('gg_theme', mode);
+
+        // theme-color meta for mobile UI
+        const meta = document.querySelector('meta[name="theme-color"]') || (function () {
+          const m = document.createElement('meta');
+          m.setAttribute('name', 'theme-color');
+          document.head.appendChild(m);
+          return m;
+        })();
+        meta.setAttribute('content', actual === 'light' ? '#ffffff' : '#0b0b0b');
+      }
+
+      window.toggleTheme = function () {
+        const cur = document.documentElement.getAttribute("data-theme") || "dark";
+        const next = cur === "dark" ? "light" : "dark";
+        applyTheme(next, /*remember=*/true);
+
+        const hadTheme = params.has("theme");
+        if (hadTheme) {
+          const p = new URL(location.href);
+          p.searchParams.set("theme", next);
+          history.replaceState({}, "", p);
+        }
+      };
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <h1>GREENER-GO Privacy & Licensing</h1>
+    <button class="toggle" type="button" onclick="toggleTheme()" aria-label="Toggle light/dark">Toggle theme</button>
+  </header>
+
+  <main class="card">
+    <p class="muted">Short version: no cookies, no third-party scripts, minimal server logs — and you’re free to reuse/modify this project with attribution.</p>
+
+    <h2 id="privacy">Privacy</h2>
+    <ul>
+      <li><strong>No cookies.</strong> We don’t set any.</li>
+      <li><strong>No third-party requests.</strong> No external fonts, analytics, or pixels.</li>
+      <li><strong>Server access logs only.</strong> Our web server records standard request metadata for reliability and abuse prevention. Logs are retained briefly and aggregated.</li>
+    </ul>
+
+    <h3>Why we collect it</h3>
+    <p>To ensure the site works, defend against abuse, and understand basic usage. Legal basis: <em>legitimate interests</em>.</p>
+
+    <h3>What we don’t do</h3>
+    <ul>
+      <li>No “selling” or “sharing” of personal data for cross-context behavioral advertising.</li>
+      <li>No fingerprinting, adtech beacons, or profiling.</li>
+      <li>No storage of your search terms; they are handed directly to Google.</li>
+    </ul>
+
+    <h3>Where data lives</h3>
+    <p>Our servers are hosted in the EU and powered by renewable-heavy providers (see <a href="https://sustainablehosting.com">Sustainable Hosting</a> for details).</p>
+
+    <h3>Your choices</h3>
+    <p>If you have questions or requests, email us at <a href="mailto:support@sustainablehosting.com">support@sustainablehosting.com</a>. We’ll help.</p>
+
+    <p class="muted small">“Google” is a trademark of Google LLC. This site is independent and not affiliated with or endorsed by Google.</p>
+  </main>
+
+  <section class="card" aria-labelledby="licensing">
+    <h2 id="licensing">Licensing</h2>
+    <p>You’re free to copy, reuse, and modify this project. Please keep a small by-line with a link to <a href="https://sustainablehosting.com">Sustainable Hosting</a> (see “Attribution” below).</p>
+
+    <h3 id="code-license">Code License (MIT)</h3>
+    <p class="small">Applies to HTML/CSS/JS and any build scripts in this project.</p>
+<pre class="small"><code>MIT License
+
+Copyright (c) 2025 Sustainable Hosting
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</code></pre>
+
+    <h3 id="content-license">Content &amp; Design (CC BY 4.0)</h3>
+    <p class="small">Text content and page design are licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International</a>.</p>
+    <ul class="small">
+      <li>You may copy, redistribute, remix, transform, and build upon the material for any purpose, even commercially.</li>
+      <li><strong>Attribution required:</strong> include a credit to “Based on Greener-Go by Sustainable Hosting” linking to <a href="https://sustainablehosting.com">https://sustainablehosting.com</a> (or the Greener-Go page).</li>
+    </ul>
+
+    <h3 id="attribution">Attribution guidance</h3>
+    <p class="small">A simple footer line is sufficient, for example:</p>
+    <p class="small"><em>“Based on Greener-Go by <a href="https://sustainablehosting.com">Sustainable Hosting</a>.”</em></p>
+  </section>
+
+  <p class="muted">Back to <a href="./index.html">GREENER-GO</a></p>
+</body>
+</html>
