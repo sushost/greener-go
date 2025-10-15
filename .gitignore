@@ -1,0 +1,17 @@
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Environment files / secrets
+.env
+eco_salt
+/private/
+
+# Logs
+*.log
+
+# Node / vendor (if someone extends this project)
+node_modules/
+vendor/
