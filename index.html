@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GREENER-GO | Low-energy search launcher</title>
+  <meta name="description" content="A low-energy search launcher that opens Google Web results without AI overviews. 
+No cookies, no trackers." />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+  <link rel="manifest" href="/greener-go/manifest.webmanifest">
+  <link rel="icon" href="/greener-go/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/greener-go/icons/icon-192.png">
+
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --fg: #e7e7e7;
+      --muted: #9aa0a6;
+      --accent: #7bd389;
+      --link: #9ad1ff;
+      --card: #141414;
+      --border: #2a2a2a;
+    }
+    html[data-theme="light"] {
+      --bg: #ffffff;
+      --fg: #111111;
+      --muted: #555;
+      --accent: #157347;
+      --link: #0a58ca;
+      --card: #f6f6f6;
+      --border: #dddddd;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto; max-width: 46rem; padding: 2rem 1rem 3rem;
+      background: var(--bg); color: var(--fg);
+      font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, sans-serif;
+    }
+    header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+    .brand { display: flex; flex-direction: column; }
+    h1 { margin: 0; font-size: 1.35rem; letter-spacing: .02em; }
+    .tag { color: var(--muted); font-size: .9rem; }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1rem; margin: 1.25rem 0;
+    }
+    form { display: flex; gap: .5rem; }
+    input[type="search"] {
+      flex: 1; padding: .75rem .9rem; border-radius: 10px; border: 1px solid var(--border);
+      background: transparent; color: var(--fg);
+    }
+    button {
+      padding: .75rem 1rem; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--accent); color: #071a0c; font-weight: 600; cursor: pointer;
+    }
+    .meta { color: var(--muted); font-size: .9rem; }
+    .toggle {
+      background: transparent; color: var(--fg); border: 1px solid var(--border);
+      padding: .45rem .7rem; border-radius: 10px; cursor: pointer;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .small { font-size: .9rem; }
+    .tip { margin-top: .5rem; color: var(--muted); }
+    .disclaimer { margin-top: 1rem; color: var(--muted); font-size: .85rem; }
+    .status { margin-top: .5rem; font-size: .9rem; color: var(--muted); }
+  </style>
+
+  <script>
+      // Theme: default dark, allow URL override (?theme=light or ?theme=auto), and a toggle.
+      (function () {
+        const params = new URLSearchParams(location.search);
+        const urlTheme = params.get("theme"); // "dark" | "light" | "auto" | null
+
+        // Use explicit theme from URL (and remember it), else restore last saved, else default "dark"
+        if (urlTheme) {
+          applyTheme(urlTheme, /*remember=*/true);
+        } else {
+          const saved = localStorage.getItem('gg_theme') || 'dark';
+          applyTheme(saved, /*remember=*/false);
+        }
+
+        function applyTheme(mode, remember) {
+          let actual = mode;
+          if (mode === 'auto') {
+            const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+            actual = prefersLight ? 'light' : 'dark';
+          }
+          document.documentElement.setAttribute("data-theme", actual);
+          if (remember) localStorage.setItem('gg_theme', mode);
+
+          // Keep browser UI color tidy (Android task bar, etc.)
+          const meta = document.querySelector('meta[name="theme-color"]') || (function () {
+            const m = document.createElement('meta');
+            m.setAttribute('name', 'theme-color');
+            document.head.appendChild(m);
+            return m;
+          })();
+          meta.setAttribute('content', actual === 'light' ? '#ffffff' : '#0b0b0b');
+        }
+
+        // Expose toggle + remember choice; only rewrite URL if it already had ?theme=
+        window.toggleTheme = function () {
+          const cur = document.documentElement.getAttribute("data-theme") || "dark";
+          const next = cur === "dark" ? "light" : "dark";
+          applyTheme(next, /*remember=*/true);
+
+          const hadTheme = params.has("theme");
+          if (hadTheme) {
+            const p = new URL(location.href);
+            p.searchParams.set("theme", next);
+            history.replaceState({}, "", p);
+          }
+        };
+      })();
+  </script>
+
+  <!-- Self-hosted Umami. Add DNT flag; remove if you want only Apache logs. -->
+  <script defer src="https://umami.gatekeeper-1.nettrip.org/script.js"
+          data-website-id="511b8c25-c110-482a-ad39-2f3ba5e8d826"
+          data-do-not-track="true"></script>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>GREENER-Go<span class="disclaimer">ogle</span><span class="small"> (by <a href="https://sustainablehosting.
+com">Sustainable Hosting | Carbon-Negative Web Hosting</a>)</span></h1>
+      <div class="tag">“Ten blue links. Less waste. Zero fluff.” Low-energy search launcher.</div>
+    </div>
+    <button class="toggle" type="button" onclick="toggleTheme()" aria-label="Toggle light/dark">Toggle theme</button>
+  </header>
+
+  <main class="card" role="main">
+    <p class="small">This page launches <strong>Google’s Web results</strong> (no AI overview) with personalization of
+f.</p>
+
+    <form id="search-form" action="https://www.google.com/search" method="GET" role="search" aria-label="Search the w
+eb">
+      <input name="q" type="search" placeholder="Search the web…" required autofocus />
+      <input type="hidden" name="udm" value="14"><!-- Web results (no AI overview UI) -->
+      <input type="hidden" name="pws" value="0"><!-- turn off search-history personalization -->
+      <!-- Optional “Verbatim-ish” toggle for power users: <input type="hidden" name="tbs" value="li:1"> -->
+      <button type="submit">Search</button>
+    </form>
+
+    <p class="tip">Prefer a light background by default? Add <code>?theme=light</code> to the URL (we default to dark
+ to save a few photons).</p>
+  </main>
+
+  <section class="card">
+    <h2 style="margin-top:0">Why this page?</h2>
+    <ul>
+      <li><strong>No cookies.</strong> No third-party scripts. No trackers. No recording of search terms.</li>
+      <li><strong>So privacy-oriented</strong> that annoying cookie pop-ups can be avoided.</li>
+      <li><strong>Bypasses AI summaries</strong> (and extra energy use); you get the classic web results.</li>
+      <li><strong>No abuse of content providers</strong> who depend on our site visits for revenue.</li>
+      <li><strong>Less personalization.</strong> Search history shouldn't affect the results of today.</li>
+      <li><strong>Tiny page weight</strong> ⇒ tiny energy use. A model for a greener Internet.</li>
+    </ul>
+    <p class="disclaimer">Note: “Google” is a trademark of Google LLC. This site is independent and not affiliated with
+ or endorsed by Google. Your general region/language may still apply to your queries.</p>
+    <p class="small">Privacy & Licensing: see our <a href="./privacy.html">privacy page</a>.</p>
+  </section>
+
+  <section class="card" id="eco-savings" aria-live="polite">
+    <h2 style="margin-top:0">Your estimated savings</h2>
+
+    <p>
+      For a simple web search, skipping AI processing can avoid a bit of extra compute.
+      Using conservative defaults, <strong>this search could save ~0.20 Wh and ~0.04 mL water</strong>.
+    </p>
+
+    <div class="meta">
+      <p><em>From this anonymized address (today):</em><br>
+      Estimated total avoided: <span id="addr-energy">—</span> Wh and <span id="addr-water">—</span> mL.</p>
+
+      <p><em>All visitors (running total):</em><br>
+      Estimated total avoided: <span id="tot-energy">—</span> Wh and <span id="tot-water">—</span> mL.</p>
+
+      <p id="eco-status" class="status"></p>
+    </div>
+
+    <p class="disclaimer">
+      These are <strong>rough, theory-heavy estimates</strong> meant to nudge greener defaults, not precision instrum
+ents.
+      Assumptions and method are documented in our “Intelligent Use of AI” article.
+    </p>
+  </section>
+
+  <script>
+    (function () {
+      // Helper to format small numbers but keep honesty
+      function fmt(n, digits=2) {
+        const value = Number(n || 0);
+        return value < 0.01 ? value.toFixed(4) : value.toFixed(digits);
+      }
+
+      const addrE = document.getElementById('addr-energy');
+      const addrW = document.getElementById('addr-water');
+      const totE  = document.getElementById('tot-energy');
+      const totW  = document.getElementById('tot-water');
+      const statusEl = document.getElementById('eco-status');
+
+      // Graceful status setter
+      function setStatus(msg, isError=false) {
+        if (!statusEl) return;
+        statusEl.textContent = msg || '';
+        statusEl.style.color = isError ? '#ff8a8a' : 'var(--muted)';
+      }
+
+      async function refresh() {
+        try {
+          const res = await fetch('./eco.php?mode=read', { credentials: 'same-origin', cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const j = await res.json();
+          if (!j || j.ok !== true) throw new Error('Bad JSON');
+
+          if (addrE) addrE.textContent = fmt(j.per_address_today.energy_saved_wh);
+          if (addrW) addrW.textContent = fmt(j.per_address_today.water_saved_ml);
+          if (totE)  totE.textContent  = fmt(j.totals.energy_saved_wh);
+          if (totW)  totW.textContent  = fmt(j.totals.water_saved_ml);
+
+          setStatus('Estimates active. If numbers look odd, we may be rate-limiting to prevent spam.');
+        } catch (e) {
+          // Soft-fail: keep the page fully usable regardless
+          if (addrE) addrE.textContent = '—';
+          if (addrW) addrW.textContent = '—';
+          if (totE)  totE.textContent  = '—';
+          if (totW)  totW.textContent  = '—';
+          setStatus('Eco counters currently unavailable (still 100% okay to use search).', true);
+        }
+      }
+
+      // Increment on submit without blocking the redirect
+      const form = document.getElementById('search-form');
+      if (form) {
+        form.addEventListener('submit', function () {
+          try {
+            if ('sendBeacon' in navigator) {
+              const data = new URLSearchParams();
+              data.set('mode', 'increment');
+              navigator.sendBeacon('./eco.php', data);
+            } else {
+              // Fire-and-forget fetch (no await) for older browsers
+              fetch('./eco.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'mode=increment',
+                keepalive: true
+              }).catch(()=>{});
+            }
+          } catch (_) { /* ignore */ }
+        }, { capture: true });
+      }
+
+      // Initial fetch (non-blocking)
+      refresh();
+    })();
+  </script>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        const form = document.getElementById('search-form');
+        if (form) {
+          const input = form.querySelector('input[name="q"]');
+          if (input) input.value = q;
+          form.submit();
+        }
+      }
+    })();
+    </script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/greener-go/sw.js').catch(()=>{});
+      }
+    </script>
+    <button id="installBtn" class="toggle" type="button" style="display:none">Install Greener-Go</button>
+    <script>
+      let deferredPrompt;
+      const btn = document.getElementById('installBtn');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        btn.style.display = '';
+      });
+
+      btn?.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        deferredPrompt = null;
+        btn.style.display = 'none';
+        console.log('PWA install:', outcome);
+      });
+    </script>
+    <noscript></noscript>
+    <script>
+      // Simple iOS hint
+      if (/iphone|ipad|ipod/i.test(navigator.userAgent)) {
+        const tip = document.createElement('p');
+        tip.className = 'tip';
+        tip.textContent = 'On iPhone/iPad: Share → Add to Home Screen to “install”.';
+        document.querySelector('header')?.appendChild(tip);
+      }
+    </script>
+</body>
+</html>
