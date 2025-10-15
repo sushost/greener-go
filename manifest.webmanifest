@@ -1,0 +1,15 @@
+{
+  "name": "GREENER-Go (Google Web, no AI)",
+  "short_name": "Greener-Go",
+  "description": "Low-energy search launcher: Google Web results, no AI overviews.",
+  "start_url": "/greener-go/index.html?source=pwa",
+  "scope": "/greener-go/",
+  "display": "standalone",
+  "background_color": "#0b0b0b",
+  "theme_color": "#0b0b0b",
+  "icons": [
+    { "src": "/greener-go/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/greener-go/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/greener-go/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
