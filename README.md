@@ -105,7 +105,8 @@ If you want this to behave like a “homepage” or default search engine, provi
 
 Modern search interfaces are increasingly AI‑augmented, which:
 
-- Consumes extra energy and water per query  
+- Consumes extra energy and water per query
+- Robs actual content producers of visits and revenue  
 - Encourages deeper personalization and profiling  
 - Ships more client‑side JavaScript bloat
 
