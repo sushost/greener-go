@@ -1,7 +1,7 @@
 # 🌱 GREENER-GO  
 *A privacy-first, low-energy Google search launcher*
 
-**GREENER-GO** is a tiny self-hostable search launcher that sends queries to Google’s **Web Results** view (`udm=14`) — skipping AI overviews, disabling search‑history personalization, and avoiding cookies or trackers.  
+**GREENER-GO** is a tiny self-hostable search launcher that sends queries to Google’s **Web Results** view (`udm=14`) — skipping AI overviews, disabling search‑history personalization, and avoiding cookies or trackers. It also limits the abuse of content producers who are seeing their ad revenue fall. 
 It includes an optional minimal PHP/MariaDB script that estimates energy and water saved by avoiding AI compute.
 
 👉 Live demo: https://greener-go.sustainablehosting.com (hosted by [Sustainable Hosting](https://sustainablehosting.com))
